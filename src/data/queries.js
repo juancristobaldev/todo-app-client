@@ -14,7 +14,7 @@ query {
         task
         userId
         dateCreated
-        state
+        status
     }
 }`
 
@@ -25,7 +25,7 @@ query{
         task
         userId
         dateCreated
-        state
+        status
     }
 }
 `
@@ -36,7 +36,7 @@ query{
         task
         userId
         dateCreated
-        state
+        status
     }
 }
 `

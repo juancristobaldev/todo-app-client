@@ -1,22 +1,25 @@
-import React, { useState } from "react";
+import { useQuery } from "@apollo/client";
+import React, { useEffect, useState } from "react";
+import { ME } from "../data/queries";
 
 export const TodoContext = React.createContext()
 
 export const TodoProvider = ({children}) => {
 
-  const [todos, setTodos] = useState([
-    {text:'Hola',completed:false},
-    {text:'Hola1',completed:false},
-    {text:'Hola2',completed:false}
-  ])
+  const {data,error} = useQuery(ME)
+
+  const [tasks, setTasks] = useState([])
+  const [me,setMe] = useState({})
+
   const [innerWidth,setWidth] = useState(window.innerWidth)
   const [searchValue,setSearchValue] = useState('')
   const [openModal,setOpenModal] = useState(false)
   const [errorForm,setErrorForm] = useState(false)
+  const [loading,setLoading] = useState(false)
 
   const dataUser = JSON.parse(localStorage.getItem('formData'))
-  const completedTodos = todos.filter(todo => !!todo.completed).length
-  const totalTodos = todos.length
+  const completedTodos = tasks.filter(task => !!JSON.parse(task.status)).length
+  const totalTodos = tasks.length
   let searchedTodos = []
 
   const windowWidthChange = () => {
@@ -24,80 +27,59 @@ export const TodoProvider = ({children}) => {
   }
 
   if (!searchValue.length >= 1) {
-    searchedTodos = todos
+    searchedTodos = tasks
   } else {
-    searchedTodos = todos.filter((todo) => {
-      const todoText = todo.text.toLowerCase();
+    searchedTodos = tasks.filter((task) => {
+      const todoText = task.task.toLowerCase();
       const searchText = searchValue.toLowerCase();
       return todoText.includes(searchText)
     });
   }
-  const toSomething = (text,action) => {
 
-    const todoIndex = todos.findIndex(todo => todo.text === text);
-    let newList = [...todos];
+  const createTask = async (task) => {
+    
+  }
 
-    const equal = newList.filter((item) => {
-      return item.text.toLowerCase() === text.toLowerCase()
-    });
+  const deleteTask = async (variables) => {
 
-    if (action === 'check') {
+  }
 
-      if (equal[0].completed === true) {
+  const updateTask = async (variables) => {
 
-        newList[todoIndex].completed = false
+  }
 
-      } else {
+  useEffect(  () => {
+    if(!data)  setLoading(true)
+    if(data){
+       setLoading(false)
+       setMe(data.getUser)
+       setTasks(data.getTasks)
+    }
+  },[data,loading])
 
-        newList[todoIndex].completed = true
-        setTimeout(() => {
-          newList.splice(todoIndex,1)
-          newList.push({
-              text:text,
-              completed: true
-          })
-          setTodos(newList)
-        },500);
-
-      }
-
-      setTodos(newList);
-    } else if (action === 'delete') {
-
-      newList.splice(todoIndex,1);
-      setTodos(newList);
-
-    } else if (action === 'add') {
-      if (text.length > 0) {
-        if (equal.length === 0) {
-            newList.unshift({
-                text:text,
-                completed:false
-            })
-            setOpenModal(!openModal)
-        } else {
-          setErrorForm(true)
-        }
-        setTodos(newList)
-      }
-    };
-  };
+  console.log(me,tasks)
 
   return (
     <TodoContext.Provider value={{
+        me,
+        tasks,
+        error,
+        loading,
         totalTodos,
         completedTodos,
         searchValue,
         setSearchValue,
         searchedTodos,
-        toSomething,
         openModal,
         setOpenModal,
         errorForm,
         setErrorForm,
         windowWidthChange,
         innerWidth,
-        dataUser
+        dataUser,
+        createTask,
+        deleteTask,
+        updateTask
     }}>
       {children}
     </TodoContext.Provider>

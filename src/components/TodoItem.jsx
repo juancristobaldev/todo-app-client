@@ -13,7 +13,7 @@ export default function TodoItem({onDelete,completed,text,onComplete,theme}){
                 </div>
             </div>
             
-            <CheckBox theme={theme} completed={completed} onClick={onComplete}/>
+            <CheckBox completed={completed} onClick={onComplete}/>
         </div>
     )
 }

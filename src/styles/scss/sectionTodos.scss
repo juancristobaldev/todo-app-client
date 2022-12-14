@@ -12,12 +12,25 @@ $breakpoints: (
   }
 }
 section.sectionTodos {
+  height: 100%;
   overflow: auto;
+  max-height: calc(60vh - 75px);
   @include media-up(md-sm) {
     background-color: white;
     border-radius: 1%;
     box-shadow: 2px 2px 12px rgba($color: #000000, $alpha: 0.15);
     grid-area: 2/2/4/3;
     z-index: 1;
+  }
+  .api-message {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    p {
+      color: rgba(0, 0, 0, 0.5);
+      font-style: italic;
+    }
   }
 }

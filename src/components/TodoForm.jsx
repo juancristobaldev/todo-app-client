@@ -1,11 +1,18 @@
-import React from "react";
+import { useMutation } from "@apollo/client";
+import React, { useState } from "react";
 import { TodoContext } from "../context/TodoContext";
+import { CREATE_TASK } from "../data/mutations";
+import { ME } from "../data/queries";
 import '../styles/scss/formModal.scss';
+import { Loading } from "./Loading";
 
 export default function TodoForm(){
-    const [textArea,setTextArea] = React.useState('')
+    const [text,setText] = useState('')
+    const [errors,setErrors] = useState({})
+
+    const [createTask, {data,loading}] = useMutation(CREATE_TASK)
+
     const {
-        toSomething,
         openModal,
         setOpenModal,
         errorForm,
@@ -13,30 +20,45 @@ export default function TodoForm(){
     } = React.useContext(TodoContext)
 
     const onChange = (e) => {
-        setTextArea(e.target.value)
-        setErrorForm(false)
+        setText(e.target.value)
+        setErrors({})
     }
 
     const onCancel = (event) => {
         event.preventDefault()
         setOpenModal(!openModal)
     }
-    const onSubmit = (event) => {
+    const onSubmit = async (event) => {
         event.preventDefault()
-        toSomething(textArea,"add")
+        
+        await createTask({
+            variables:{
+                input:{
+                    task:text
+                }
+            },
+            refetchQueries:[{query:ME}]
+        }).then( async ({data}) => {
+            const {errors,success} = data.createTask
+            if(errors) setErrors(JSON.parse(errors))
+            if(success) setOpenModal(false)
+        })
     }
+
+    console.log(errors.task)
 
     return(
         <div className="back">
+            {loading && <Loading/>}
             <form className="formModal" onSubmit={onSubmit}>
                 <label>ADD A NEW TASK</label>
                 <div className="divInput">
                     <input
                         placeholder="New task"
-                        value={textArea}
+                        value={text}
                         onChange={(e) => onChange(e)}
                     />
-                    {errorForm && <div className="divError"><p>This task already exist</p></div>}
+                    {errors.task && <p className="error">{errors.task}</p>}
                 </div>
                 <div className="divButton">
                     <button

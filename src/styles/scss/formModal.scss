@@ -41,6 +41,7 @@ form.formModal {
     @include dflexcenter();
     flex-direction: column;
     grid-area: 2 / 1 / 3 / 3;
+    gap: 10px;
     input {
       outline: none;
       transition: 0.5s;
@@ -81,6 +82,7 @@ form.formModal {
       }
     }
     .onSubmit {
+      background-color: #5991fc;
       color: white;
       font-weight: 200;
       &:hover {
@@ -88,14 +90,7 @@ form.formModal {
       }
     }
   }
-  .divError {
-    grid-area: 4 / 1 / 5 / 3;
-    p {
-      color: red;
-      text-align: center;
-      margin-top: 10px;
-    }
-  }
+
   @include media-up(sm-md) {
     width: 80%;
   }

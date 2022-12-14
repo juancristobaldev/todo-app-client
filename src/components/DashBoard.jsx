@@ -1,10 +1,16 @@
 import React from "react";
+import { useContext } from "react";
+import { TodoContext } from "../context/TodoContext";
 import '../styles/scss/DashBoard.scss';
 
 let hoy = new Date()
 
 
 export default function DashBoard({children}){
+
+    const { me } = useContext(TodoContext)
+
+    console.log(me)
 
     return(
         <header className="HeaderDash">
@@ -16,7 +22,7 @@ export default function DashBoard({children}){
                 <p>{hoy.toDateString()}</p>
             </div>
             <div className="HeaderUser" >
-                <h1>¡Hi Juan Cristobal!</h1>
+                <h1>¡Hi {me.name}!</h1>
             </div>
             <div className="HeaderTodoComplete">
             {children}

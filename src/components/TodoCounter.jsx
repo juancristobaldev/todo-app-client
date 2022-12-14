@@ -5,6 +5,8 @@ export default function TodoCounter(){
     
     const {completedTodos,totalTodos,innerWidth} = React.useContext(TodoContext)
 
+    console.log(completedTodos,totalTodos)
+
     let n = ((completedTodos * 100) / totalTodos)
     let bar, stylesBar;
 
@@ -18,7 +20,7 @@ export default function TodoCounter(){
         stylesBar = {
             width: "100%",
             height: "1vh",
-            background: "gray",
+            background: "white",
         }
     }
 
@@ -26,6 +28,8 @@ export default function TodoCounter(){
     else bar = {width:parseInt(n).toFixed(2) + '%'}
     bar["height"] = '100%'
     bar["transition"] = '1s'
+    bar["background"] = "rgb(32, 87, 209)"
+    
 
     return(
         <div>

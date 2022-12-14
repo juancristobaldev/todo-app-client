@@ -11,80 +11,91 @@ import Footer from './Footer';
 import { Modal } from './Modal';
 import TodoForm from './TodoForm';
 import { TodoContext } from '../context/TodoContext';
+import { Loading } from './Loading';
+import { useMutation } from '@apollo/client';
+import { UPDATE_TASK } from '../data/mutations';
+import { ME } from '../data/queries';
+import { ListApi } from './ListApi';
+import { Container } from './generals/Container';
+import '../styles/scss/containerTodos.scss'
 
 const TodoApp = () => {
     const 
-    {error,
+    {
+    tasks,  
+    error,
     loading,
     searchedTodos,
-    toSomething,
     searchValue,
     setSearchValue,
     openModal,
     windowWidthChange,
     innerWidth,
-    dataUser
+    
     } = useContext(TodoContext);
+
+    const [updateTask, {data,loading:loadingUpdate}] = useMutation(UPDATE_TASK)
 
     window.addEventListener('resize', () => {
         windowWidthChange()
     });
 
+    const onComplete = async (task) => {
+        await updateTask({
+          variables:{
+            input:{
+              id:task.id,
+              status:JSON.parse(task.status) ? "false" : "true"
+            }
+          },
+          refetchQueries:[{query:ME}]
+        }).then( ({data}) => {
+          const {errors,success} = data.updateTask
+          console.log(errors,success)
+        })
+    }
+
+
     return (
-        <Main>
+      <Main>
+        {(loading || loadingUpdate) && <Loading/>}
         <DashBoard 
           user={'Juancri'}
         >
           <TodoCounter/>
         </DashBoard>
-        {innerWidth <= 499 &&
+        <Container className={'containerToDos'}>
           <TodoSearch 
-          searchValue={searchValue} 
-          setSearchValue={setSearchValue}
+            searchValue={searchValue} 
+            setSearchValue={setSearchValue}
           />
-        }
-        <TodoList>
-        {innerWidth >= 500 &&
-          <TodoSearch 
-          searchValue={searchValue} 
-          setSearchValue={setSearchValue}
-          />
-        }
-          {error && <p style={{
-            textAlign:"center",
-            padding:"30%"
-          }}>
-            Oops! this is error...</p>}
-          {loading && <p style={{
-            textAlign:"center",
-            padding:"30%"
-            }}>
-              Loading... take it easy
-            </p>}
-          {(!loading && !searchedTodos.length ) && 
-            <p style={{
-              textAlign:"center",
-              padding:"45% 0%"
-            }}
-            >
-            ¡Create your first task!
-            </p>
-          }
-          {searchedTodos.map(todo => (
-              <TodoItem 
-                key={todo.text} 
-                text={todo.text}
-                completed={todo.completed}
-                onDelete = {() => toSomething(todo.text,"delete")}
-                onComplete={() => toSomething(todo.text,"check")}
-                />
-          ))}
-        </TodoList>
-            {openModal && (
-              <Modal>
-                <TodoForm/>
-              </Modal>
-            )}
+          <ListApi
+          className='sectionTodos'
+          data={tasks}
+          loading={loading}
+          error={error}
+          searchContents={searchedTodos}
+          onError={() => <div className='api-message'><p>Ooops! It's a error</p></div>}
+          onLoading={() => <div className='api-message'><p>Loading...</p></div>}
+          onEmpty={() => <div className='api-message'><p>Create your first task!</p></div>}
+          onEmptySearch={() => <div className='api-message'><p>No results with "{searchValue}"</p></div>}
+          render={task => (
+            <TodoItem 
+              key={task.id} 
+              text={task.task}
+              completed={JSON.parse(task.status)}
+              onDelete = {() => console.log('delete')}
+              onComplete={() => onComplete(task)}
+              />
+        )}
+          >
+        </ListApi>
+        </Container>
+        {openModal && (
+          <Modal>
+            <TodoForm/>
+          </Modal>
+        )}
         <CreateTodoButton/>
         <Footer/>
       </Main>

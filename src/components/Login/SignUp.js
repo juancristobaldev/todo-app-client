@@ -76,7 +76,7 @@ export default function SignUp(){
             }
         }).then(({data}) => {
             const {errors,success} = data.createUser
-            if(success) navigate('/signin')
+            if(success) navigate('/login')
             if(errors) setErrors(JSON.parse(errors))
         })
 

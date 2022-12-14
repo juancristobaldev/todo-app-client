@@ -44,8 +44,8 @@ mutation createTask($input:CreateTaskInput!){
 `
 
 export const UPDATE_TASK = gql`
-mutation UpdateTask($input:UpdateTaskInput!){
-    UpdateTask(input:$input){
+mutation updateTask($input:UpdateTaskInput!){
+    updateTask(input:$input){
     errors
     success
     }

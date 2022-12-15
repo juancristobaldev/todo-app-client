@@ -13,7 +13,7 @@ import TodoForm from './TodoForm';
 import { TodoContext } from '../context/TodoContext';
 import { Loading } from './Loading';
 import { useMutation } from '@apollo/client';
-import { UPDATE_TASK } from '../data/mutations';
+import { DELETE_TASK, UPDATE_TASK } from '../data/mutations';
 import { ME } from '../data/queries';
 import { ListApi } from './ListApi';
 import { Container } from './generals/Container';
@@ -35,6 +35,7 @@ const TodoApp = () => {
     } = useContext(TodoContext);
 
     const [updateTask, {data,loading:loadingUpdate}] = useMutation(UPDATE_TASK)
+    const [deleteTask, {data,loading:loadingDelete}] = useMutation(DELETE_TASK)
 
     window.addEventListener('resize', () => {
         windowWidthChange()
@@ -55,6 +56,19 @@ const TodoApp = () => {
         })
     }
 
+    const onDelete = async (id) => {
+      await deleteTask({
+        variables:{
+          input:{
+            id:id
+          }
+        },
+        refetchQueries:[{query:ME}]
+      }).then( ({data}) => {
+        const {errors,success} = data.deleteTask
+        console.log(errors,success)
+      })
+    }
 
     return (
       <Main>
@@ -84,7 +98,7 @@ const TodoApp = () => {
               key={task.id} 
               text={task.task}
               completed={JSON.parse(task.status)}
-              onDelete = {() => console.log('delete')}
+              onDelete = {() => onDelete(task.id)}
               onComplete={() => onComplete(task)}
               />
         )}

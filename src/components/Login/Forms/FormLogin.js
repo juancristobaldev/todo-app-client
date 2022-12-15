@@ -10,36 +10,36 @@ export default function FormLogin({formDates,width,onLogin,errors}){
                     <div className="divDes">
                         <p className="todoApp"
                             >
-                            TODO APP
+                            TASK APP
                         </p>
                         <p 
                         className="todoDes">
-                            Lleva una cuenta de tus tareas diarias
+                            Control your daily tasks
                         </p>
                     </div>
             }
             <form onSubmit={(event) => onLogin(event)} className="formLogin">
             <div className="divTitle">
-                <h2>Inicia sesión.</h2>
+                <h2>Sign in.</h2>
             </div>
             <div className="divUser divInput">
-                <label>Usuario:</label>
+                <label>Username:</label>
                 <input onChange={(event) => formDates(event,"user")}/>
                 {errors.user && <p className="error">{errors.user}</p>}
             </div>
             <div className="divPass divInput">
-                <label>Contraseña:</label>
+                <label>Password:</label>
                 <input type={"password"} onChange={(event) => formDates(event,"pass")}/>
                 {errors.pass && <p className="error">{errors.pass}</p>}
             </div>
             <div className="divButtons">
                 <button className="buttonLogin">
-                Iniciar sesion
+                Sign in
                 </button>
                 <button
                 className="buttonRegister"
                 onClick={() => navigate('/signup')}
-                >Registrarse</button>
+                >Register</button>
             </div>
         </form>
         </React.Fragment>

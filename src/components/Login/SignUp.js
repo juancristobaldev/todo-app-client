@@ -96,27 +96,6 @@ export default function SignUp(){
             width={width}
             errors={errorsData}
             />
-            {modal && 
-                <Modal>
-                    <Container
-                    className={'back'}
-                    >
-                        <Container className={'modal-success'}>
-                            <MdDone
-                            fill="green"
-                            />
-                            <Text
-                            className={'text-modal'}
-                            text={'Usuario creado con exito'}
-                            />
-                            <Button
-                            onClick={() => navigate('/login')}
-                            textButton={'Aceptar'}
-                            />
-                        </Container>
-                    </Container>
-                </Modal>
-            }
         </LoginLayout>
     )
 }

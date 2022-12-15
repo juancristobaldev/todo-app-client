@@ -10,7 +10,7 @@ export default function FormRegister({width,formDates,onRegister,errors}){
                     <div className="divDes">
                         <p className="todoApp"
                         >
-                            TASK APP
+                            Task's App
                         </p>
                         <p className="todoDes"
                         >

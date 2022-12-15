@@ -10,7 +10,7 @@ export default function FormLogin({formDates,width,onLogin,errors}){
                     <div className="divDes">
                         <p className="todoApp"
                             >
-                            TASK APP
+                            Task's App
                         </p>
                         <p 
                         className="todoDes">

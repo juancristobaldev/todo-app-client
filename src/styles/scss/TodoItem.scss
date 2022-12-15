@@ -36,6 +36,7 @@ $breakpoints: (
     span {
       @include displayflexjustifycenter();
       text-decoration: none !important;
+      cursor: pointer;
     }
     div {
       @include displayflexaligncenter();
@@ -43,6 +44,7 @@ $breakpoints: (
   }
   .checkBoxItem {
     @include dflexjcenteracenter();
+    cursor: pointer;
   }
 }
 .itemDone {

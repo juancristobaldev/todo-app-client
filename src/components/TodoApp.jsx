@@ -35,7 +35,7 @@ const TodoApp = () => {
     } = useContext(TodoContext);
 
     const [updateTask, {data,loading:loadingUpdate}] = useMutation(UPDATE_TASK)
-    const [deleteTask, {data,loading:loadingDelete}] = useMutation(DELETE_TASK)
+    const [deleteTask, {data:dataTask,loading:loadingDelete}] = useMutation(DELETE_TASK)
 
     window.addEventListener('resize', () => {
         windowWidthChange()
@@ -72,7 +72,7 @@ const TodoApp = () => {
 
     return (
       <Main>
-        {(loading || loadingUpdate) && <Loading/>}
+        {(loading || loadingUpdate || loadingDelete) && <Loading/>}
         <DashBoard 
           user={'Juancri'}
         >

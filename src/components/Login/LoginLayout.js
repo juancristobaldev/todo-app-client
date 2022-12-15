@@ -14,10 +14,9 @@ const LoginLayout = ({ children,width }) => {
             <div>
                 {width > 600 && 
                 <React.Fragment>
-                    <h1>ToDo App</h1>
+                    <h1>Task's App</h1>
                     <h3>
-                        Anota tus tareas y <br/>
-                        hazla realidad
+                        Control your daily's task's
                     </h3>
                 </React.Fragment>
                 }

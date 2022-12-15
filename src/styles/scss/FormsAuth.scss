@@ -86,12 +86,6 @@ $breakpoints: (
       }
     }
   }
-  @include media-up(lg) {
-    form.formRegister {
-      grid-template: 12.5% 16.25% 16.25% 16.25% 16.25% 15% / 80% !important;
-      height: 100%;
-    }
-  }
   form.formLogin,
   form.formRegister {
     width: 80%;
@@ -127,7 +121,7 @@ $breakpoints: (
       grid-area: 1 / 1 / 2 / 2;
     }
     .divButtons {
-      grid-area: 6/1/7/2;
+      grid-area: 7/1/8/2;
       .buttonRegister {
         color: white;
         background-color: #21d4fd;

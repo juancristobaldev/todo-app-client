@@ -10,7 +10,7 @@ import { setContext } from '@apollo/client/link/context';
 const container = document.getElementById('root');
 
 const httpLink = createHttpLink({
-  uri:'http://localhost:4000/graphql'
+  uri:'https://task-app-server.vercel.app/graphql'
 })
 
 const authLink = setContext((_, { headers }) => {

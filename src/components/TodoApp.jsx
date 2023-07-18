@@ -71,7 +71,7 @@ const TodoApp = () => {
     }
 
     return (
-      <Main>
+      <Main className={'mainDashboard'}>
         {(loading || loadingUpdate || loadingDelete) && <Loading/>}
         <DashBoard 
           user={'Juancri'}

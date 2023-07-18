@@ -1,48 +1,54 @@
 import React from "react";
+import { useTheme } from "react-jss";
 import { useNavigate } from "react-router-dom";
-import '../../../styles/scss/FormsAuth.scss';
+import "../../../styles/scss/FormsAuth.scss";
+import { TodoLogo } from "../ToDoLogo";
+import { useLoginStyles } from "./loginStyles";
 
-export default function FormLogin({formDates,width,onLogin,errors}){
-    const navigate = useNavigate()
-    return(
-        <React.Fragment>
-            {width <= 600 && 
-                    <div className="divDes">
-                        <p className="todoApp"
-                            >
-                            Task's App
-                        </p>
-                        <p 
-                        className="todoDes">
-                            Control your daily tasks
-                        </p>
-                    </div>
-            }
-            <form onSubmit={(event) => onLogin(event)} className="formLogin">
-            <div className="divTitle">
-                <h2>Sign in.</h2>
-            </div>
-            <div className="divUser divInput">
-                <label>Username:</label>
-                <input onChange={(event) => formDates(event,"user")}/>
-                {errors.user && <p className="error">{errors.user}</p>}
-            </div>
-            <div className="divPass divInput">
-                <label>Password:</label>
-                <input type={"password"} onChange={(event) => formDates(event,"pass")}/>
-                {errors.pass && <p className="error">{errors.pass}</p>}
-            </div>
-            <div className="divButtons">
-                <button className="buttonLogin">
-                Sign in
-                </button>
-                <button
-                className="buttonRegister"
-                onClick={() => navigate('/signup')}
-                >Register</button>
-            </div>
-        </form>
-        </React.Fragment>
-    
-    )
+export default function FormLogin({ formDates, width, onLogin, errors }) {
+  const navigate = useNavigate();
+
+  const theme = useTheme();
+
+  const classes = useLoginStyles({ theme });
+  return (
+    <main className={classes.mainSignIn}>
+      <TodoLogo className={classes.todoLogo} />
+      <p className={`${classes.p} ${classes.formTitle}`}>To continue sign in</p>
+      <form onSubmit={(event) => onLogin(event)} className={classes.formLogin}>
+        <div className={classes.fieldForm}>
+          <input
+            placeholder="Email"
+            autoComplete="off"
+            onChange={(event) => formDates(event, "user")}
+          />
+          {errors.user && <p className="error">{errors.user}</p>}
+        </div>
+        <div className={classes.fieldForm}>
+          <input
+            placeholder="Password"
+            autoComplete="off"
+            type={"password"}
+            onChange={(event) => formDates(event, "pass")}
+          />
+          {errors.pass && <p className="error">{errors.pass}</p>}
+        </div>
+        <button className={`${classes.signInButton} ${classes.button}`}>
+          Sign in
+        </button>
+      </form>
+      <p className={`${classes.notAccount} ${classes.p}`}>
+        Do you not have a account?
+      </p>
+      <button onClick={() => navigate('/signup')} className={`${classes.button} ${classes.registerButton}`}>
+        Sign up
+      </button>
+      <p className={`${classes.p} ${classes.continueGoogle}`}>
+        Or continue with Google
+      </p>
+      <button className={`${classes.button} ${classes.buttonGoogle}`}>
+        Continue with Google
+      </button>
+    </main>
+  );
 }

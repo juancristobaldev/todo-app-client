@@ -13,7 +13,7 @@ $breakpoints: (
   }
 }
 
-main {
+main .mainDashboard {
   display: grid;
   @include media-up(sm) {
     grid-template: 27.5vh 10vh 50vh 12.5vh / 100%;

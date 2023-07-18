@@ -19,8 +19,7 @@ $breakpoints: (
     transition: 0.5s;
     display: grid;
     grid-template-rows: repeat(3, 1fr);
-    background-color: #21d4fd;
-    background-image: linear-gradient(19deg, #21d4fd 0%, #b721ff 100%);
+    background-color: #1c1c1c;
     place-content: center;
     color: white;
     div {

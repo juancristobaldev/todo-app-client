@@ -3,14 +3,14 @@ import { useContext } from "react";
 import { TodoContext } from "../context/TodoContext";
 import '../styles/scss/DashBoard.scss';
 
-let hoy = new Date()
-
 
 export default function DashBoard({children}){
 
     const { me } = useContext(TodoContext)
 
-    console.log(me)
+    
+    let hoy = new Date()    
+    const days = ['Lun','Mar','Mie','Jue','Vie','Sab','Dom']
 
     return(
         <header className="HeaderDash">

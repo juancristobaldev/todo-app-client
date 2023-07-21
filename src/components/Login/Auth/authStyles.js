@@ -68,6 +68,13 @@ export const useAuthStyles = createUseStyles({
       border: "1px solid white",
       borderRadius: sizes.borderRadius,
       color: ({ theme }) => theme.color,
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      "& svg": {
+        height: "1.5em",
+        width: "2em",
+      },
     },
   },
 });

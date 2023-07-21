@@ -1,28 +1,29 @@
-import React, { useContext } from 'react';
-import '../styles/App.css';
-import TodoCounter from './TodoCounter';
-import TodoSearch from './TodoSearch';
-import TodoList from './TodoList';
-import TodoItem from './TodoItem';
-import CreateTodoButton from './CreateTodoButton';
-import DashBoard from  './DashBoard';
-import Main from './Main';
-import Footer from './Footer';
-import { Modal } from './Modal';
-import TodoForm from './TodoForm';
-import { TodoContext } from '../context/TodoContext';
-import { Loading } from './Loading';
-import { useMutation } from '@apollo/client';
-import { DELETE_TASK, UPDATE_TASK } from '../data/mutations';
-import { ME } from '../data/queries';
-import { ListApi } from './ListApi';
-import { Container } from './generals/Container';
-import '../styles/scss/containerTodos.scss'
+import React, { useContext } from "react";
+
+import TodoCounter from "./TodoCounter";
+import TodoSearch from "./TodoSearch";
+import TodoItem from "./TodoItem";
+import CreateTodoButton from "./CreateTodoButton";
+import Main from "./Main";
+import Footer from "./Footer";
+import { Modal } from "./Modal";
+import TodoForm from "./TodoForm";
+import { TodoContext } from "../context/TodoContext";
+import { Loading } from "./Loading";
+import { useMutation } from "@apollo/client";
+import { DELETE_TASK, UPDATE_TASK } from "../data/mutations";
+import { ME } from "../data/queries";
+import { ListApi } from "./ListApi";
+import { Container } from "./generals/Container";
+
+import Header from "./Header";
+import { useTodoAppStyle } from "../styles/jss/useTodoAppStyle";
+import { useTheme } from "react-jss";
+import { Weeks } from "./Weeks";
 
 const TodoApp = () => {
-    const 
-    {
-    tasks,  
+  const {
+    tasks,
     error,
     loading,
     searchedTodos,
@@ -31,89 +32,108 @@ const TodoApp = () => {
     openModal,
     windowWidthChange,
     innerWidth,
-    
-    } = useContext(TodoContext);
+  } = useContext(TodoContext);
 
-    const [updateTask, {data,loading:loadingUpdate}] = useMutation(UPDATE_TASK)
-    const [deleteTask, {data:dataTask,loading:loadingDelete}] = useMutation(DELETE_TASK)
+  const [updateTask, { data, loading: loadingUpdate }] =
+    useMutation(UPDATE_TASK);
+  const [deleteTask, { data: dataTask, loading: loadingDelete }] =
+    useMutation(DELETE_TASK);
 
-    window.addEventListener('resize', () => {
-        windowWidthChange()
-    });
-
-    const onComplete = async (task) => {
-        await updateTask({
-          variables:{
-            input:{
-              id:task.id,
-              status:JSON.parse(task.status) ? "false" : "true"
-            }
-          },
-          refetchQueries:[{query:ME}]
-        }).then( ({data}) => {
-          const {errors,success} = data.updateTask
-          console.log(errors,success)
-        })
-    }
-
-    const onDelete = async (id) => {
-      await deleteTask({
-        variables:{
-          input:{
-            id:id
-          }
+  const onComplete = async (task) => {
+    await updateTask({
+      variables: {
+        input: {
+          id: task.id,
+          status: JSON.parse(task.status) ? "false" : "true",
         },
-        refetchQueries:[{query:ME}]
-      }).then( ({data}) => {
-        const {errors,success} = data.deleteTask
-        console.log(errors,success)
-      })
-    }
+      },
+      refetchQueries: [{ query: ME }],
+    }).then(({ data }) => {
+      console.log(data);
+    });
+  };
 
-    return (
-      <Main className={'mainDashboard'}>
-        {(loading || loadingUpdate || loadingDelete) && <Loading/>}
-        <DashBoard 
-          user={'Juancri'}
-        >
-          <TodoCounter/>
-        </DashBoard>
-        <Container className={'containerToDos'}>
-          <TodoSearch 
-            searchValue={searchValue} 
-            setSearchValue={setSearchValue}
-          />
-          <ListApi
-          className='sectionTodos'
+  const onDelete = async (id) => {
+    await deleteTask({
+      variables: {
+        input: {
+          id: id,
+        },
+      },
+      refetchQueries: [{ query: ME }],
+    }).then(({ data }) => {
+      const { errors, success } = data.deleteTask;
+      console.log(errors, success);
+    });
+  };
+
+  const theme = useTheme();
+  const classes = useTodoAppStyle({ theme });
+
+  return (
+    <Main className={classes.main}>
+      {(loadingDelete || loadingUpdate) && (
+        <Loading className={classes.loading} />
+      )}
+      <Weeks className={classes.weeks} />
+      <Header>
+        <TodoCounter />
+      </Header>
+      <TodoSearch
+        className={classes.todoSearch}
+        searchValue={searchValue}
+        setSearchValue={setSearchValue}
+      />
+      <Container className={classes.containerTodos}>
+        <ListApi
+          className="sectionTodos"
           data={tasks}
           loading={loading}
           error={error}
           searchContents={searchedTodos}
-          onError={() => <div className='api-message'><p>Ooops! It's a error</p></div>}
-          onLoading={() => <div className='api-message'><p>Loading...</p></div>}
-          onEmpty={() => <div className='api-message'><p>Create your first task!</p></div>}
-          onEmptySearch={() => <div className='api-message'><p>No results with "{searchValue}"</p></div>}
-          render={task => (
-            <TodoItem 
-              key={task.id} 
+          onError={() => (
+            <div className={classes.apiMessage}>
+              <p>Ooops! It's a error</p>
+            </div>
+          )}
+          onLoading={() => (
+            <div className={classes.apiMessage}>
+              <p>Loading...</p>
+            </div>
+          )}
+          onEmpty={() => (
+            <div className={classes.apiMessage}>
+              <p>Create your first task!</p>
+            </div>
+          )}
+          onEmptySearch={() => (
+            <div className={classes.apiMessage}>
+              <p>No results with "{searchValue}"</p>
+            </div>
+          )}
+          render={(task) => (
+            <TodoItem
+              classNameCheckbox={classes.checkBox}
+              className={`${classes.todoItem} ${
+                JSON.parse(task.status) ? "complete" : "not"
+              }`}
+              key={task.id}
               text={task.task}
               completed={JSON.parse(task.status)}
-              onDelete = {() => onDelete(task.id)}
+              onDelete={() => onDelete(task.id)}
               onComplete={() => onComplete(task)}
-              />
-        )}
-          >
-        </ListApi>
-        </Container>
-        {openModal && (
-          <Modal>
-            <TodoForm/>
-          </Modal>
-        )}
-        <CreateTodoButton/>
-        <Footer/>
-      </Main>
-    )
-}
+            />
+          )}
+        ></ListApi>
+      </Container>
+      {openModal && (
+        <Modal>
+          <TodoForm />
+        </Modal>
+      )}
+      <CreateTodoButton className={classes.createTodoBotton} />
+    </Main>
+  );
+};
 
 export default TodoApp;

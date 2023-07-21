@@ -1,42 +1,41 @@
-import { gql } from "@apollo/client"
+import { gql } from "@apollo/client";
 
 export const ME = gql`
-query {
-    getUser{
-        id
-        name
-        user
-        pass
-        token
-    }
-    getTasks{
+  query {
+    getUser {
+      id
+      name
+      email
+      pass
+      token
+      tasks {
         id
         task
-        userId
-        dateCreated
         status
+      }
     }
-}`
+  }
+`;
 
 export const GET_TASKS = gql`
-query{
-    getTasks{
-        id
-        task
-        userId
-        dateCreated
-        status
+  query {
+    getTasks {
+      id
+      task
+      userId
+      dateCreated
+      status
     }
-}
-`
+  }
+`;
 export const GET_TASK = gql`
-query{
-    getTask{
-        id
-        task
-        userId
-        dateCreated
-        status
+  query {
+    getTask {
+      id
+      task
+      userId
+      dateCreated
+      status
     }
-}
-`
+  }
+`;

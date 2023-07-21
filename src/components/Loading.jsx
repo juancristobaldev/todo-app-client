@@ -1,16 +1,14 @@
 import React from "react";
 import { Container } from "./generals/Container";
-import ReactLoading from "react-loading"
-import '../styles/scss/Loading.scss'
+import ReactLoading from "react-loading";
+import { ActivityIndicator } from "./Login/ActivityIndicator";
 
-const Loading = () => {
-    return (
-        <Container
-            className={'loading'}
-        >
-            <ReactLoading type="spinningBubbles"/>
-        </Container>
-    )
-}
+const Loading = ({ className }) => {
+  return (
+    <Container className={className}>
+      <ActivityIndicator size={30}/>
+    </Container>
+  );
+};
 
-export {Loading}
+export { Loading };

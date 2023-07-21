@@ -1,5 +1,6 @@
 import { createUseStyles } from "react-jss";
 import * as sizes from "../../../constants/sizes";
+import * as generals from "../../../styles/generals/generals";
 
 export const useLoginStyles = createUseStyles({
   mainSignIn: {
@@ -49,29 +50,15 @@ export const useLoginStyles = createUseStyles({
     gridArea: "3/1/4/2",
   },
   fieldForm: {
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    gap: 10,
-    margin: "0 25px",
-    "& input": {
-      transition: ".5s",
-      borderRadius: sizes.borderRadius,
-      fontSize: sizes.mediumFont,
-      height: "50px",
-      padding: "0 20px",
-      border: "1px solid white",
-      background: "transparent",
-      "&::placeholder": {
-        color: "white",
-      },
-      "&:focus": {
-        outline: "2px solid white",
-      },
-    },
+    ...generals.input
   },
   signInButton: {
     background: ({ theme }) => theme.primaryColor,
+    '& .dotsIndicator':{
+      '& div':{
+        backgroundColor:'black'
+      }
+    }
   },
   notAccount: { gridArea: "5/1/6/2" },
   registerButton: {
@@ -83,5 +70,12 @@ export const useLoginStyles = createUseStyles({
     background: "transparent",
     color: "white",
     border: "1px solid white",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    '& svg':{
+      height: "1.5em",
+      width: "2em",
+  }
   },
 });

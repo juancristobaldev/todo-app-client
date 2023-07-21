@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import { TodoContext } from "../context/TodoContext";
 import { CREATE_TASK } from "../data/mutations";
 import { ME } from "../data/queries";
-import '../styles/scss/formModal.scss';
 import { Loading } from "./Loading";
 
 export default function TodoForm(){

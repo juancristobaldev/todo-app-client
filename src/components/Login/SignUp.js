@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from "react";
 
-import "../../styles/scss/Login.scss";
-import "../../styles/scss/Modal.scss";
-
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@apollo/client";
 import { CREATE_USER } from "../../data/mutations";
@@ -10,70 +7,70 @@ import { TodoLogo } from "./ToDoLogo";
 import { useRegisterStyles } from "./Forms/registerStyles";
 import { useTheme } from "react-jss";
 
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import { ContinueGoogle } from "./ContinueGoogle";
+import { ButtonIndicator } from "../generals/ButtonActivityIndicator";
+
 export default function SignUp() {
-  const [createUser] = useMutation(CREATE_USER);
+  const [createUser, { loading }] = useMutation(CREATE_USER);
+
+  const [status, setStatus] = useState(false);
+
+  const { values, errors, handleSubmit, setFieldValue, setErrors } = useFormik({
+    initialValues: {
+      name: "",
+      email: "",
+      pass: "",
+      passConfirm: "",
+    },
+    validationSchema: Yup.object().shape({
+      name: Yup.string()
+        .min(3, "The name is too short")
+        .max(20, "The name is too long")
+        .required("The name is required"),
+      email: Yup.string()
+        .email("Enter a valid email")
+        .required("The email is required"),
+      pass: Yup.string()
+        .min(8, "The password requires a minimum of 8 characters")
+        .max(20, "The password is too long")
+        .required("Enter a password"),
+      passConfirm: Yup.string()
+        .oneOf([Yup.ref("pass"), null], "Password must match")
+        .required("Please confirm your password"),
+    }),
+    onSubmit: async (values) => {
+      await createUser({
+        variables: {
+          input: {
+            ...values,
+          },
+        },
+      }).then(({ data }) => {
+        const { errors, success } = data.createUser;
+        if (success) {
+          setStatus(200);
+          navigate("/");
+        } else if (errors) {
+          setStatus(404);
+          setErrors(JSON.parse(errors));
+        }
+
+        setTimeout(() => {
+          setStatus(false);
+        }, 2000);
+      });
+    },
+  });
+
+  console.log(errors);
 
   const navigate = useNavigate();
-  const [width, setWidth] = React.useState(window.innerWidth);
-  const [valueForm, setValueForm] = React.useState({
-    user: "",
-    name: "",
-    pass: "",
-    passConfirm: "",
-  });
-  const [error, setError] = React.useState({
-    error: false,
-    type: "",
-  });
-
-  const [errorsData, setErrors] = React.useState({
-    error: false,
-    errors: [],
-  });
 
   const theme = useTheme();
 
   const classes = useRegisterStyles({ theme });
-
-  const windowWidthChange = () => {
-    setWidth(window.innerWidth);
-  };
-
-  window.addEventListener("resize", () => {
-    windowWidthChange();
-  });
-
-  const formDates = (event, input) => {
-    const object = { ...valueForm };
-    object[input] = event.target.value;
-    setValueForm(object);
-    setError({ error: false });
-  };
-
-  const onRegister = async (event) => {
-    event.preventDefault();
-
-    const { user, name, pass, passConfirm } = valueForm;
-
-    await createUser({
-      variables: {
-        input: {
-          user: user,
-          name: name,
-          pass: pass,
-          passConfirm: passConfirm,
-        },
-      },
-    }).then(({ data }) => {
-      const { errors, success } = data.createUser;
-      if (success) navigate("/login");
-      if (errors) setErrors(JSON.parse(errors));
-    });
-  };
-
-  useEffect(() => {
-    setErrors({});
-  }, [valueForm]);
 
   return (
     <main className={classes.main}>
@@ -81,37 +78,52 @@ export default function SignUp() {
       <p className={`${classes.toContinue} ${classes.p}`}>
         To continue sign up
       </p>
-      <form onSubmit={(event) => onRegister(event)} className={classes.form}>
+      <form
+        onSubmit={(event) => {
+          event.preventDefault();
+          handleSubmit();
+        }}
+        className={classes.form}
+      >
         <div className={classes.fieldForm}>
           <input
             placeholder="Name"
-            onChange={(event) => formDates(event, "name")}
+            onChange={(event) => setFieldValue("name", event.target.value)}
           />
-          {errorsData.name && <p className="error">{errorsData.name}</p>}
-        </div>
-        <div className={classes.fieldForm}>
-          <input             placeholder="Email" onChange={(event) => formDates(event, "user")} />
-          {errorsData.user && <p className="error">{errorsData.user}</p>}
+          {errors.name && <p className="error">{errors.name}</p>}
         </div>
         <div className={classes.fieldForm}>
           <input
-                      placeholder="Password"
-            type={"password"}
-            onChange={(event) => formDates(event, "pass")}
+            placeholder="Email"
+            onChange={(event) => setFieldValue("email", event.target.value)}
           />
-          {errorsData.pass && <p className="error">{errorsData.pass}</p>}
+          {errors.email && <p className="error">{errors.email}</p>}
         </div>
         <div className={classes.fieldForm}>
           <input
-                      placeholder="Confirm password"
+            placeholder="Password"
             type={"password"}
-            onChange={(event) => formDates(event, "passConfirm")}
+            onChange={(event) => setFieldValue("pass", event.target.value)}
           />
-          {errorsData.pass && <p className="error">{errorsData.passConfirm}</p>}
+          {errors.pass && <p className="error">{errors.pass}</p>}
         </div>
-        <button type="submit" className={`${classes.signUp} ${classes.button}`}>
-          Sign up
-        </button>
+        <div className={classes.fieldForm}>
+          <input
+            placeholder="Confirm password"
+            type={"password"}
+            onChange={(event) =>
+              setFieldValue("passConfirm", event.target.value)
+            }
+          />
+          {errors.passConfirm && <p className="error">{errors.passConfirm}</p>}
+        </div>
+        <ButtonIndicator
+          type="submit"
+          text="Sign up"
+          loading={loading}
+          className={`${classes.signUp} ${classes.button}`}
+          status={status}
+        />
       </form>
       <p className={`${classes.uHaveAccount} ${classes.p}`}>
         Do you have a account?
@@ -125,12 +137,9 @@ export default function SignUp() {
       <p className={`${classes.orContinue} ${classes.p}`}>
         Or continue with Google
       </p>
-      <button
+      <ContinueGoogle
         className={`${classes.continueGoogle} ${classes.button}`}
-        onClick={() => navigate("/login")}
-      >
-        Continue with Google
-      </button>
+      />
     </main>
   );
 }

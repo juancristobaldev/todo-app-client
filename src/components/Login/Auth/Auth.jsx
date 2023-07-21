@@ -1,6 +1,7 @@
 import React from "react";
 import { useTheme } from "react-jss";
 import { useNavigate } from "react-router-dom";
+import { ContinueGoogle } from "../ContinueGoogle";
 import { TodoLogo } from "../ToDoLogo";
 import { useAuthStyles } from "./authStyles";
 
@@ -18,7 +19,7 @@ export const Auth = () => {
       className: "signIn",
     },
     {
-      onClick: () => navigate("/signup"),
+      onClick: () => navigate("/register"),
       text: "Sign up",
       className: "signUp",
     },
@@ -41,9 +42,7 @@ export const Auth = () => {
         <p>Or continue with Google</p>
       </div>
       <div className={classes.divContinueGoogle}>
-        <button onClick={() => console.log("click")}>
-          Continue with Google
-        </button>
+        <ContinueGoogle />
       </div>
     </main>
   );

@@ -1,23 +1,15 @@
-import {React} from "react";
-import '../styles/scss/checkbox.scss';
-import {FaCheck} from 'react-icons/fa'
+import { React } from "react";
 
-export default function CheckBox(props){
+import { FaCheck } from "react-icons/fa";
 
-    if(props.completed == true){
-        return  <div className="checkBoxItem">
-                    <div
-                    onClick={() => props.onClick()}
-                    className="checkBoxOn"
-                    >
-                        <FaCheck fill="white"/>
-                    </div>
-                </div>
-    } 
-    else return <div className="checkBoxItem">
-                    <div 
-                    onClick={() => props.onClick()} 
-                    className="checkBoxOff"
-                    >
-                </div></div>
+export default function CheckBox(props) {
+  return (
+    <div onClick={props.onClick} className={props.className}>
+      <div
+        className={props.completed ? "checkBoxOn" : "checkBoxOff"}
+      >
+        {props.completed && <FaCheck fill="white" />}
+      </div>
+    </div>
+  );
 }

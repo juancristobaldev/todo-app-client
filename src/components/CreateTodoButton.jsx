@@ -1,21 +1,18 @@
 import React from "react";
-import '../styles/scss/CreateTodoButton.scss';
 import { RiAddFill } from "react-icons/ri";
 import { TodoContext } from "../context/TodoContext";
 
-export default function CreateTodoButton(){
+export default function CreateTodoButton({ className}){
     const {openModal,setOpenModal,setErrorForm,} = React.useContext(TodoContext)
 
     return(
-        <button className="buttonCreateTodo"
+        <button className={className}
         onClick={() => {
             setOpenModal(!openModal)
             setErrorForm(false)
         }}
-        ><RiAddFill 
-                    height=".5em"
-                    width=".5em"
-        />
+        >
+        Create a new ToDo
         </button>
     )
 }

@@ -23,8 +23,13 @@ export const useRegisterStyles = createUseStyles({
   button: {
     ...generals.button,
   },
-  signUp:{
-      background:({theme}) => theme.primaryColor
+  signUp: {
+    background: ({ theme }) => theme.primaryColor,
+    '& .dotsIndicator':{
+        '& div':{
+          backgroundColor:'black'
+        }
+      }
   },
   todoLogo: {
     gridArea: "2/1/3/2",
@@ -48,6 +53,15 @@ export const useRegisterStyles = createUseStyles({
   },
   signIn: { gridArea: "6/1/7/2" },
   orContinue: { gridArea: "7/1/8/2" },
-  continueGoogle: { gridArea: "8/1/9/2" , ...generals.buttonOutlined},
-
+  continueGoogle: {
+    gridArea: "8/1/9/2",
+    ...generals.buttonOutlined,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    "& svg": {
+        height: "1.5em",
+        width: "2em"
+    },
+  },
 });

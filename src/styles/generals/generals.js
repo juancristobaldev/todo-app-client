@@ -14,10 +14,10 @@ export const button = {
 };
 
 export const buttonOutlined = {
-    background: "transparent",
-    color: "white",
-    border: "1px solid white",
-}
+  background: "transparent",
+  color: "white",
+  border: "1px solid white",
+};
 
 export const input = {
   display: "flex",
@@ -32,12 +32,16 @@ export const input = {
     height: "50px",
     padding: "0 20px",
     border: "1px solid white",
+    color: "white",
     background: "transparent",
     "&::placeholder": {
       color: "white",
     },
     "&:focus": {
       outline: "2px solid white",
+    },
+    "&:autofill": {
+      fontSize: sizes.mediumFont,
     },
   },
 };
@@ -47,4 +51,18 @@ export const p = {
   fontWeight: "200",
   alignSelf: "center",
   textAlign: "center",
+};
+
+export const logoHorizontal = {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  gap: 10,
+  "& img": {
+    width: "10vw !important",
+    height: "10vw !important",
+  },
+  "& h3": {
+    fontSize: sizes.largeFont,
+  },
 };

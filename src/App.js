@@ -16,6 +16,7 @@ const token = localStorage.getItem("token");
 function App() {
   const theme = {
     backgroundColor: "#212121",
+    subBackground: "#414141",
     primaryColor: "#6AFFCC",
     secondaryColor: "white",
     color: "white",
@@ -30,6 +31,7 @@ function App() {
               <Route path="/" element={<TodoApp />} />
               <Route path="/login" element={<Navigate to={"/"} />} />
               <Route path="/register" element={<Navigate to={"/"} />} />
+              <Route path="/auth" element={<Navigate to={"/"} />} />
             </>
           ) : (
             <>

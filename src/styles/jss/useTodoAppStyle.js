@@ -1,12 +1,13 @@
 import { createUseStyles } from "react-jss";
 import * as generals from "../generals/generals";
 import * as sizes from "../../constants/sizes";
+
 export const useTodoAppStyle = createUseStyles({
   main: {
     background: ({ theme }) => theme.backgroundColor,
     color: "white",
     display: "grid",
-    gridTemplateRows: "5vh 25vh 10vh 10vh 35vh 10vh 5vh",
+    gridTemplateRows: "5vh 25vh 7.5vh 10vh 37.5vh 10vh 5vh",
   },
   todoSearch: {
     gridArea: "3/1/4/2",
@@ -27,10 +28,10 @@ export const useTodoAppStyle = createUseStyles({
     },
   },
   weeks: {
+    margin: "0 25px",
     gridArea: "4/1/5/2",
     display: "grid",
-    gridTemplateColumns: "10% repeat(5,1fr) 10%",
-    margin: 7,
+    gridTemplateColumns: "5% repeat(7,1fr) 5%",
     "& .day": {
       transition: ".5s",
       display: "flex",
@@ -40,6 +41,20 @@ export const useTodoAppStyle = createUseStyles({
       fontSize: sizes.smallFont,
       "&.here": {
         fontSize: sizes.mediumSmallLargeFont,
+        "& p": {
+          color: ({ theme }) => theme.primaryColor,
+        },
+      },
+    },
+    "& .buttonDirection": {
+      border: 0,
+      background: ({ theme }) => theme.subBackground,
+      height: "50%",
+      alignSelf: "center",
+      borderRadius:10,
+      "& svg": {
+        scale: 2,
+        fill:'white'
       },
     },
   },
@@ -58,6 +73,7 @@ export const useTodoAppStyle = createUseStyles({
   },
   containerTodos: {
     gridArea: "5/1/6/2",
+    marginTop:'calc((7.5vh - 35px) / 2)'
   },
   apiMessage: {
     color: "white",

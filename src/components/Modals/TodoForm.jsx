@@ -1,9 +1,8 @@
-import { useMutation } from "@apollo/client";
-import React, { useState } from "react";
-import { TodoContext } from "../context/TodoContext";
-import { CREATE_TASK } from "../data/mutations";
-import { ME } from "../data/queries";
-import { Loading } from "./Loading";
+import { useMutation } from "@apollo/client"
+import { useState } from "react"
+import { CREATE_TASK } from "../../data/mutations"
+import { Loading } from "../Loading"
+
 
 export default function TodoForm(){
     const [text,setText] = useState('')
@@ -11,37 +10,16 @@ export default function TodoForm(){
 
     const [createTask, {data,loading}] = useMutation(CREATE_TASK)
 
-    const {
-        openModal,
-        setOpenModal,
-        errorForm,
-        setErrorForm,
-    } = React.useContext(TodoContext)
-
     const onChange = (e) => {
         setText(e.target.value)
         setErrors({})
     }
 
     const onCancel = (event) => {
-        event.preventDefault()
-        setOpenModal(!openModal)
+
     }
     const onSubmit = async (event) => {
-        event.preventDefault()
-        
-        await createTask({
-            variables:{
-                input:{
-                    task:text
-                }
-            },
-            refetchQueries:[{query:ME}]
-        }).then( async ({data}) => {
-            const {errors,success} = data.createTask
-            if(errors) setErrors(JSON.parse(errors))
-            if(success) setOpenModal(false)
-        })
+
     }
 
     console.log(errors.task)

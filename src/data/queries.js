@@ -39,3 +39,15 @@ export const GET_TASK = gql`
     }
   }
 `;
+
+export const GET_TASKS_BY_DATE = gql`
+  query getTasksByDate($date: String!) {
+    getTasksByDate(date: $date) {
+      task
+      id
+      status
+      dateCreated
+      dateAsigned
+    }
+  }
+`;

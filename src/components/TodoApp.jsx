@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 
 import TodoCounter from "./TodoCounter";
 import TodoSearch from "./TodoSearch";
@@ -7,12 +7,12 @@ import CreateTodoButton from "./CreateTodoButton";
 import Main from "./Main";
 import Footer from "./Footer";
 import { Modal } from "./Modal";
-import TodoForm from "./TodoForm";
+
 import { TodoContext } from "../context/TodoContext";
 import { Loading } from "./Loading";
-import { useMutation } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { DELETE_TASK, UPDATE_TASK } from "../data/mutations";
-import { ME } from "../data/queries";
+import { GET_TASKS_BY_DATE, ME } from "../data/queries";
 import { ListApi } from "./ListApi";
 import { Container } from "./generals/Container";
 
@@ -20,19 +20,35 @@ import Header from "./Header";
 import { useTodoAppStyle } from "../styles/jss/useTodoAppStyle";
 import { useTheme } from "react-jss";
 import { Weeks } from "./Weeks";
+import { useDate } from "../hooks/useDate";
+import { DateTime } from "luxon";
+import { useEffect } from "react";
+import TodoForm from "./Modals/TodoForm";
 
 const TodoApp = () => {
   const {
-    tasks,
-    error,
-    loading,
     searchedTodos,
     searchValue,
     setSearchValue,
     openModal,
     windowWidthChange,
     innerWidth,
+    daySelected,
+    setDaySelected,
+    setOpenModal,
   } = useContext(TodoContext);
+
+  const [tasks, setTasks] = useState([]);
+
+  const {
+    data: dataTasks,
+    loading,
+    error,
+  } = useQuery(GET_TASKS_BY_DATE, {
+    variables: {
+      date: daySelected,
+    },
+  });
 
   const [updateTask, { data, loading: loadingUpdate }] =
     useMutation(UPDATE_TASK);
@@ -70,12 +86,21 @@ const TodoApp = () => {
   const theme = useTheme();
   const classes = useTodoAppStyle({ theme });
 
+  useEffect(() => {
+    if (!loading) {
+      setTasks(dataTasks.getTasksByDate);
+    }
+  }, [dataTasks]);
+
   return (
     <Main className={classes.main}>
       {(loadingDelete || loadingUpdate) && (
         <Loading className={classes.loading} />
       )}
-      <Weeks className={classes.weeks} />
+      <Weeks
+        daysSelected={{ daySelected, setDaySelected }}
+        className={classes.weeks}
+      />
       <Header>
         <TodoCounter />
       </Header>
@@ -91,6 +116,7 @@ const TodoApp = () => {
           loading={loading}
           error={error}
           searchContents={searchedTodos}
+          searchValue={searchValue}
           onError={() => (
             <div className={classes.apiMessage}>
               <p>Ooops! It's a error</p>
@@ -103,7 +129,7 @@ const TodoApp = () => {
           )}
           onEmpty={() => (
             <div className={classes.apiMessage}>
-              <p>Create your first task!</p>
+              <p>Asign a To Do a this date!</p>
             </div>
           )}
           onEmptySearch={() => (
@@ -131,7 +157,13 @@ const TodoApp = () => {
           <TodoForm />
         </Modal>
       )}
-      <CreateTodoButton className={classes.createTodoBotton} />
+      <CreateTodoButton
+        onClick={() => {
+          setOpenModal(!openModal);
+        }}
+        text={'Add a To Do'}
+        className={classes.createTodoBotton}
+      />
     </Main>
   );
 };

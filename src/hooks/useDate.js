@@ -1,22 +1,13 @@
 import { DateTime } from "luxon";
 import { useEffect, useState } from "react";
 
-export const useDate = () => {
-  const daysWeek = 5;
-
-  const [state, setState] = useState({
-    beginDay: 0,
-    totalDays: daysWeek,
-  });
+export const useDate = (daysSelected) => {
+  const { daySelected, setDaySelected } = daysSelected;
 
   const format = (date) => ({
     numeric: date.toFormat("dd-MM-yyyy"),
     alt: { day: date.toFormat("dd"), month: date.toFormat("MMM") },
   });
-
-  const { beginDay, totalDays } = state;
-
-  const [orientation, setOrientation] = useState("right");
 
   const today = DateTime.local();
 
@@ -25,6 +16,15 @@ export const useDate = () => {
     alt: format(today).alt,
   };
 
+  const daysWeek = 7;
+
+  const [state, setState] = useState({
+    beginDay: 0,
+    totalDays: daysWeek,
+  });
+
+  const { beginDay, totalDays } = state;
+
   const getBeginWeek = (date) => date.startOf("week");
 
   const actualBeginWeek = getBeginWeek(today);
@@ -32,16 +32,10 @@ export const useDate = () => {
   const getWeek = () => {
     const dates = [];
 
-    if (orientation === "right") {
-      for (var i = beginDay; i < totalDays; i++) {
-        const date = actualBeginWeek.plus({ days: i });
+    for (var i = beginDay; i < totalDays; i++) {
+      const date = actualBeginWeek.plus({ days: i });
 
-        dates.push(format(date));
-      }
-    } else {
-      for (var i = beginDay; i > totalDays; i--) {
-        console.log(i);
-      }
+      dates.push(format(date));
     }
 
     return dates;
@@ -68,5 +62,7 @@ export const useDate = () => {
     state,
     setState,
     todayFormats,
+    daySelected,
+    setDaySelected,
   };
 };

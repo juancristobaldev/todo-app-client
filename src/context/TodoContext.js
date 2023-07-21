@@ -1,11 +1,26 @@
 import { useQuery } from "@apollo/client";
+import { DateTime } from "luxon";
 import React, { useEffect, useState } from "react";
-import { ME } from "../data/queries";
+import { GET_TASKS_BY_DATE, ME } from "../data/queries";
 
 export const TodoContext = React.createContext();
 
 export const TodoProvider = ({ children }) => {
+  const [daySelected, setDaySelected] = useState(
+    DateTime.local().toFormat("dd-MM-yyyy")
+  );
+
   const { data, loading, error } = useQuery(ME);
+
+  const {
+    data: dataTask,
+    loading: loadingTask,
+    error: errorTask,
+  } = useQuery(GET_TASKS_BY_DATE, {
+    variables: {
+      date: daySelected,
+    },
+  });
 
   const [tasks, setTasks] = useState([]);
   const [me, setMe] = useState({});
@@ -13,15 +28,11 @@ export const TodoProvider = ({ children }) => {
   const [searchValue, setSearchValue] = useState("");
   const [openModal, setOpenModal] = useState(false);
 
-
-
   const completedTodos = tasks.filter(
     (task) => !!JSON.parse(task.status)
   ).length;
   const totalTodos = tasks.length;
   let searchedTodos = [];
-
-
 
   if (!searchValue.length >= 1) {
     searchedTodos = tasks;
@@ -42,14 +53,17 @@ export const TodoProvider = ({ children }) => {
   useEffect(() => {
     if (data && !loading) {
       const myData = { ...data.getUser };
-      const myTasks = [...data.getUser.tasks];
       delete myData.tasks;
 
       setMe(myData);
+    }
+    if (dataTask && !loadingTask) {
+      const myTasks = [...dataTask.getTasksByDate];
       setTasks(myTasks);
     }
-  }, [data, loading]);
+  }, [dataTask, data, loadingTask, loading]);
 
+  console.log(tasks);
 
   return (
     <TodoContext.Provider
@@ -68,6 +82,8 @@ export const TodoProvider = ({ children }) => {
         createTask,
         deleteTask,
         updateTask,
+        daySelected,
+        setDaySelected,
       }}
     >
       {children}

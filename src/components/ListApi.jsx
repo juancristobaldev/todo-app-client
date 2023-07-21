@@ -1,19 +1,33 @@
 import React from "react";
 
 function ListApi(props) {
-    return (
-      <section className={`${props.className} ${props.data.length === 0 && "empty"}`}>
-        {props.error && props.onError()}
-        {props.loading && props.onLoading()}
-        {(!props.loading && !props.data.length ) && props.onEmpty()}
-        {props.searchContents && (props.data.length > 0 && props.searchContents.length === 0) && props.onEmptySearch()}
-        {props.children}
-        {props.searchContents ? props.searchContents === undefined ? [].map(props.render) : props.searchContents.map(props.render)
-        :
-        props.data === undefined ? [].map(props.render) : props.data.map(props.render)
-        }
-      </section>
-    );
-  }
+  console.log(props.searchContents, props.data);
 
-export {ListApi}
+  return (
+    <section
+      className={`${props.className} ${props.data.length === 0 && "empty"}`}
+    >
+      {props.error && props.onError()}
+      {props.loading && props.onLoading()}
+      {!props.loading &&
+        !props.data.length &&
+        !props.searchContents.length &&
+        props.onEmpty()}
+      {props.searchContents &&
+        props.data.length > 0 &&
+        props.searchContents.length === 0 &&
+        props.onEmptySearch()}
+      {props.children}
+      {props.searchContents.length > 0 &&
+      props.data.length > 0 &&
+      props.searchValue.length > 0
+        ? props.searchContents.map(props.render)
+        : props.searchContents.length > 0 &&
+          props.data.length > 0 &&
+          props.searchValue.length === 0 &&
+          props.data.map(props.render)}
+    </section>
+  );
+}
+
+export { ListApi };
